@@ -1,0 +1,4 @@
+TrialName	WidthofStimulus1	WidthofStimulus2	Names	TrialNumber
+Categorization	200	195	xxx	5
+Categorization	190	185	yyy	5
+Categorization	195	190	[xxx, yyy]	5	
