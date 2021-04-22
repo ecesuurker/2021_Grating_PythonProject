@@ -1,0 +1,5 @@
+type,block,randomize,stim1,label,foil,key,ITI,color,color2,same_diff,presTime,title,content,trialText,button1,feedbackCorrect,feedbackIncorrect,keyboard,keypress,RT,ACC,t
+categorization,3,yes,,knurp,blash,1,500,"[0,.5,0]",,,,,,,,,,1 2 3,1,1.6608378181699663,1,1.7607311515312176
+categorization,3,yes,,blash,knurp,1,500,"[0,.6,0]",,,,,,,,,,1 2 3,2,0.8092208484595176,0,2.576967757573584
+categorization,3,yes,,knurp,blash,3,500,"[0,.0,.5]",,,,,,,,,,1 2 3,1,0.848907636362128,0,3.4436203636578284
+categorization,3,yes,,blash,knurp,3,500,"[0,.0,.6]",,,,,,,,,,1 2 3,1,0.7426346666470636,0,4.19320145456004

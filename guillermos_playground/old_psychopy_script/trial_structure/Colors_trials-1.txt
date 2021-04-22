@@ -1,0 +1,6 @@
+type	block	randomize	stim1	label	foil	key	ITI	color	color2	same_diff	presTime	title	content	trialText	button1	feedbackCorrect	feedbackIncorrect	keyboard
+categorization	3	yes		knurp	blash	1	500	[0,.5,0]										1 2 3
+categorization	3	yes		blash	knurp	1	500	[0,.6,0]										1 2 3
+categorization	3	yes		knurp	blash	3	500	[0,.0,.5]										1 2 3
+categorization	3	yes		blash	knurp	3	500	[0,.0,.6]										1 2 3
+instructions	6						500					Thank you!	 Press ENTER to finish the experiment.		return			

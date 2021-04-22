@@ -1,0 +1,19 @@
+type	block	randomize	stim1	label	foil	key	ITI	color	color2	same_diff	presTime	title	content	trialText	button1	feedbackCorrect	feedbackIncorrect	keyboard
+instructions	1						500					Welcome!	 Your task is to learn to associate colors and novel words		return			
+instructions	1						500					alrighty	<br><br><br><br>Press ENTER to begin.		return			
+exposure	1	yes		knurp	blash	1	500	[0,.6,0]										1 2 3
+exposure	2	yes		blash	knurp	1	500	[0,.5,0]										1 2 3
+exposure	2	yes		knurp	blash	2	500	[0,.6,0]										1 2 3
+exposure	2	yes		blash	knurp	2	500	[0,.5,0]										1 2 3
+categorization	3	yes		knurp	blash	1	500	[0,.0,.5]										1 2 3
+categorization	3	yes		blash	knurp	1	500	[0,.0,.6]										1 2 3
+categorization	3	yes		knurp	blash	3	500	[0,.0,.5]										1 2 3
+categorization	3	yes		blash	knurp	3	500	[0,.0,.6]										1 2 3
+memory	4	yes				1	500	[0,.0,.5]	[0,.0,.5]	same			same or different?					1 2 3
+memory	4	yes				1	500	[0,.0,.6]	[0,.0,.6]	same			same or different?					1 2 3
+memory	4	yes				2	500	[0,.0,.5]	[0,.0,.6]	different			same or different?					1 2 3
+memory	4	yes				2	500	[0,.0,.6]	[0,.0,.5]	different			same or different?					1 2 3
+discrimination	5	yes				1	500	[0,.0,.5]	[0,.0,.5]	same			same or different?					1 2 3
+discrimination	5	yes				1	500	[0,.0,.6]	[0,.0,.6]	same			same or different?					1 2 3
+discrimination	5	yes				2	500	[0,.0,.5]	[0,.0,.6]	different			same or different?					1 2 3
+discrimination	5	yes				2	500	[0,.0,.6]	[0,.0,.5]	different			same or different?					1 2 3
