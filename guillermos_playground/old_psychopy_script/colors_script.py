@@ -57,7 +57,7 @@ class Experiment(object):
             pos=[0,0],
             closeShape=False,
             lineColor="black")
-        self.image_l = visual.ImageStim(self.win, pos=(-400, 0), contrast=.75, size=[600,600])
+        self.image_l = visual.ImageStim(self.win, pos=(0, 0), size=[300,300])
 
 
         # actually run the experiment routines
@@ -88,6 +88,7 @@ class Experiment(object):
                     self.clock.reset()  # reset trial clock
                     trial = self.present_trial(trial)  # present the trial
                     log.writerow(trial)  # log the trial data
+        self.win.close()
 
 
 
@@ -102,8 +103,8 @@ class Experiment(object):
             trial = self.categorization_trial(trial)
         elif type == 'discrimination':
             trial = self.discrimination_trial(trial)
-        elif type == 'memory':
-            trial = self.memory_trial(trial)
+        #elif type == 'memory':
+         #   trial = self.memory_trial(trial)
         else:
             # unknown trial type, return some kind of error?
             print('ERROR: unknown trial type')
@@ -170,13 +171,35 @@ class Experiment(object):
             core.quit()
         if trial['keypress'] == trial['key']:
             trial['ACC'] = 1
+            i = random.randint(1,3)
+            imgname = "Correct" + str(i) + ".jpg"
+            self.title.text = "Well Done!"
+            self.title.draw()
+            self.word1.text = "Correct Answer"
+            self.word1.pos = (0,-200)
+            self.word1.draw()
+            self.image_l.image = imgname
+            self.image_l.draw()
+            self.win.flip()
+            core.wait(.5)
         else:
             trial['ACC'] = 0
+            i = random.randint(1,3)
+            imgname = "Incorrect" + str(i) + ".png"
+            self.title.text = "Sorry!"
+            self.title.draw()
+            self.word1.text = "Wrong Answer"
+            self.word1.pos = (0,-200)
+            self.word1.draw()
+            self.image_l.image = imgname
+            self.image_l.draw()
+            self.win.flip()
+            core.wait(.5)
         self.win.callOnFlip(self.isi.start, float(trial['ITI']) / 1000 - self.frame_dur)
         # flip buffer again and start ISI timer
         self.win.flip()
         return trial
-
+        """
     def memory_trial(self, trial):
         self.fixation.draw()
         self.win.flip()
@@ -203,13 +226,35 @@ class Experiment(object):
             core.quit()
         if trial['keypress'] == trial['key']:
             trial['ACC'] = 1
+            i = random.randint(1,3)
+            imgname = "Correct" + str(i) + ".jpg"
+            self.title.text = "Well Done!"
+            self.title.draw()
+            self.word1.text = "Correct Answer"
+            self.word1.pos = (0,-200)
+            self.word1.draw()
+            self.image_l.image = imgname
+            self.image_l.draw()
+            self.win.flip()
+            core.wait(.5)
         else:
             trial['ACC'] = 0
+            i = random.randint(1,3)
+            imgname = "Incorrect" + str(i) + ".png"
+            self.title.text = "Sorry!"
+            self.title.draw()
+            self.word1.text = "Wrong Answer"
+            self.word1.pos = (0,-200)
+            self.word1.draw()
+            self.image_l.image = imgname
+            self.image_l.draw()
+            self.win.flip()
+            core.wait(.5)
         self.win.callOnFlip(self.isi.start, float(trial['ITI']) / 1000 - self.frame_dur)
         # flip buffer again and start ISI timer
         self.win.flip()
         return trial
-
+        """
     def discrimination_trial(self, trial):
         self.fixation.draw()
         self.win.flip()
@@ -233,8 +278,30 @@ class Experiment(object):
             core.quit()
         if trial['keypress'] == trial['key']:
             trial['ACC'] = 1
+            i = random.randint(1,3)
+            imgname = "Correct" + str(i) + ".jpg"
+            self.title.text = "Well Done!"
+            self.title.draw()
+            self.word1.text = "Correct Answer"
+            self.word1.pos = (0,-200)
+            self.word1.draw()
+            self.image_l.image = imgname
+            self.image_l.draw()
+            self.win.flip()
+            core.wait(.5)
         else:
             trial['ACC'] = 0
+            i = random.randint(1,3)
+            imgname = "Incorrect" + str(i) + ".png"
+            self.title.text = "Sorry!"
+            self.title.draw()
+            self.word1.text = "Wrong Answer"
+            self.word1.pos = (0,-200)
+            self.word1.draw()
+            self.image_l.image = imgname
+            self.image_l.draw()
+            self.win.flip()
+            core.wait(.5)
         self.win.callOnFlip(self.isi.start, float(trial['ITI']) / 1000 - self.frame_dur)
         # flip buffer again and start ISI timer
         self.win.flip()
