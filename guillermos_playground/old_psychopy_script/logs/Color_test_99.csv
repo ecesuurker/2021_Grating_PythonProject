@@ -1,19 +1,11 @@
 type,block,randomize,stim1,label,foil,key,ITI,color,color2,same_diff,presTime,title,content,trialText,button1,feedbackCorrect,feedbackIncorrect,keyboard,keypress,RT,ACC,t
-instructions,1,,,,,,500,,,,,Welcome!, Your task is to learn to associate colors and novel words,,return,,,,return,0.7953443999867886,,1.327666400000453
-instructions,1,,,,,,500,,,,,alrighty,<br><br><br><br>Press ENTER to begin.,,return,,,,return,0.49727170006372035,,1.8606704999692738
-exposure,1,yes,,knurp,blash,1,500,"[0,.6,0]",,,,,,,,,,1 2 3,,,,4.424725199933164
-exposure,2,yes,,blash,knurp,1,500,"[0,.5,0]",,,,,,,,,,1 2 3,,,,6.989277499960735
-exposure,2,yes,,knurp,blash,2,500,"[0,.6,0]",,,,,,,,,,1 2 3,,,,9.55342919996474
-exposure,2,yes,,blash,knurp,2,500,"[0,.5,0]",,,,,,,,,,1 2 3,,,,12.116763400030322
-categorization,3,yes,,knurp,blash,1,500,"[0,.0,.5]",,,,,,,,,,1 2 3,1,1.7381436000578105,1,14.398695499985479
-categorization,3,yes,,blash,knurp,1,500,"[0,.0,.6]",,,,,,,,,,1 2 3,1,1.1594858000753447,1,16.12957240000833
-categorization,3,yes,,knurp,blash,3,500,"[0,.0,.5]",,,,,,,,,,1 2 3,1,1.1296457999851555,0,17.81182699999772
-categorization,3,yes,,blash,knurp,3,500,"[0,.0,.6]",,,,,,,,,,1 2 3,1,1.078653399948962,0,19.443323399988003
-memory,4,yes,,,,1,500,"[0,.0,.5]","[0,.0,.5]",same,,,same or different?,,,,,1 2 3,,,,19.443632400012575
-memory,4,yes,,,,1,500,"[0,.0,.6]","[0,.0,.6]",same,,,same or different?,,,,,1 2 3,,,,19.443728199927136
-memory,4,yes,,,,2,500,"[0,.0,.5]","[0,.0,.6]",different,,,same or different?,,,,,1 2 3,,,,19.44380549993366
-memory,4,yes,,,,2,500,"[0,.0,.6]","[0,.0,.5]",different,,,same or different?,,,,,1 2 3,,,,19.443880199920386
-discrimination,5,yes,,,,1,500,"[0,.0,.5]","[0,.0,.5]",same,,,same or different?,,,,,1 2 3,1,0.7244309999514371,1,22.257548599969596
-discrimination,5,yes,,,,1,500,"[0,.0,.6]","[0,.0,.6]",same,,,same or different?,,,,,1 2 3,1,4.814188999938779,1,29.1840565999737
-discrimination,5,yes,,,,2,500,"[0,.0,.5]","[0,.0,.6]",different,,,same or different?,,,,,1 2 3,1,0.31470929994247854,0,31.598172200028785
-discrimination,5,yes,,,,2,500,"[0,.0,.6]","[0,.0,.5]",different,,,same or different?,,,,,1 2 3,1,0.2783260999713093,0,33.97941859997809
+instructions,1,,,,,,500,,,,,Welcome!, Your task is to learn to associate colors and novel words,,return,,,,return,1.114338105704519,,1.648859125612944
+instructions,1,,,,,,500,,,,,alrighty,<br><br><br><br>Press ENTER to begin.,,return,,,,return,0.37218284438677074,,2.04935376875801
+categorization,3,yes,,knurp,blash,1,500,"[0,.0,.5]",,,,,,,,,,1 2 3,1,0.9320323859865312,1,3.5182039052670007
+categorization,3,yes,,blash,knurp,1,500,"[0,.0,.6]",,,,,,,,,,1 2 3,2,0.9112129617642495,0,4.987155860106213
+categorization,3,yes,,knurp,blash,3,500,"[0,.0,.5]",,,,,,,,,,1 2 3,1,0.8666417454187467,0,6.4061426513599145
+categorization,3,yes,,blash,knurp,3,500,"[0,.0,.6]",,,,,,,,,,1 2 3,2,0.8077815385913709,0,7.758220739229728
+memory,4,yes,,,,1,500,"[0,.0,.5]","[0,.0,.5]",same,,,same or different?,,,,,1 2 3,2,0.49601526693004416,0,11.346584261698808
+memory,4,yes,,,,1,500,"[0,.0,.6]","[0,.0,.6]",same,,,same or different?,,,,,1 2 3,1,0.7872505996365362,1,15.235988706892385
+memory,4,yes,,,,2,500,"[0,.0,.5]","[0,.0,.6]",different,,,same or different?,,,,,1 2 3,2,0.38579159145410813,1,18.724736084464894
+memory,4,yes,,,,2,500,"[0,.0,.6]","[0,.0,.5]",different,,,same or different?,,,,,1 2 3,1,0.281061742150996,0,22.096275049127144
