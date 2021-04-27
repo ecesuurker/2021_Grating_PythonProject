@@ -254,11 +254,13 @@ class Experiment(object):
             imgnameBeg = "Correct"
             titleText = "Well done!"
             word1Text = "Correct answer"
+            FileExt = ".jpg"
         else:
             imgnameBeg = "Incorrect"
             titleText = "Sorry!"
             word1Text = "Wrong answer"
-        imgname = imgnameBeg + str(i) + ".jpg"
+            FileExt = ".png"
+        imgname = imgnameBeg + str(i) + FileExt
         self.image_l.image = imgname
         self.image_l.draw()
         self.title.text = titleText
