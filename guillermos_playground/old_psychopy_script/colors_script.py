@@ -171,30 +171,10 @@ class Experiment(object):
             core.quit()
         if trial['keypress'] == trial['key']:
             trial['ACC'] = 1
-            i = random.randint(1,3)
-            imgname = "Correct" + str(i) + ".jpg"
-            self.title.text = "Well Done!"
-            self.title.draw()
-            self.word1.text = "Correct Answer"
-            self.word1.pos = (0,-200)
-            self.word1.draw()
-            self.image_l.image = imgname
-            self.image_l.draw()
-            self.win.flip()
-            core.wait(.5)
+            self.feedback(1)
         else:
             trial['ACC'] = 0
-            i = random.randint(1,3)
-            imgname = "Incorrect" + str(i) + ".png"
-            self.title.text = "Sorry!"
-            self.title.draw()
-            self.word1.text = "Wrong Answer"
-            self.word1.pos = (0,-200)
-            self.word1.draw()
-            self.image_l.image = imgname
-            self.image_l.draw()
-            self.win.flip()
-            core.wait(.5)
+            self.feedback(0)
         self.win.callOnFlip(self.isi.start, float(trial['ITI']) / 1000 - self.frame_dur)
         # flip buffer again and start ISI timer
         self.win.flip()
@@ -278,36 +258,39 @@ class Experiment(object):
             core.quit()
         if trial['keypress'] == trial['key']:
             trial['ACC'] = 1
-            i = random.randint(1,3)
+            self.feedback(1)
+        else:
+            trial['ACC'] = 0
+            self.feedback(0)
+        self.win.callOnFlip(self.isi.start, float(trial['ITI']) / 1000 - self.frame_dur)
+        # flip buffer again and start ISI timer
+        self.win.flip()
+        return trial
+    
+    def feedback(self,accuracy):
+        i = random.randint(1,3)
+        if int(accuracy) == 1:
             imgname = "Correct" + str(i) + ".jpg"
+            self.image_l.image = imgname
+            self.image_l.draw()
             self.title.text = "Well Done!"
             self.title.draw()
             self.word1.text = "Correct Answer"
             self.word1.pos = (0,-200)
             self.word1.draw()
-            self.image_l.image = imgname
-            self.image_l.draw()
             self.win.flip()
             core.wait(.5)
         else:
-            trial['ACC'] = 0
-            i = random.randint(1,3)
             imgname = "Incorrect" + str(i) + ".png"
+            self.image_l.image = imgname
+            self.image_l.draw()
             self.title.text = "Sorry!"
             self.title.draw()
             self.word1.text = "Wrong Answer"
             self.word1.pos = (0,-200)
             self.word1.draw()
-            self.image_l.image = imgname
-            self.image_l.draw()
             self.win.flip()
             core.wait(.5)
-        self.win.callOnFlip(self.isi.start, float(trial['ITI']) / 1000 - self.frame_dur)
-        # flip buffer again and start ISI timer
-        self.win.flip()
-        return trial
-
-
 # if __name__ == '__main__':
 #     category_selected = False
 #     while category_selected is False:
