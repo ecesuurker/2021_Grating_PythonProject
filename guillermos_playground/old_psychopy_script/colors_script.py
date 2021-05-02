@@ -17,7 +17,7 @@ class Experiment(object):
         self.fps = fps
         self.category = category
         # set up file paths, etc.
-        # self.trials_fname = 'trial_structure/Colors_trials.txt'
+        #self.trials_fname = 'trial_structure/Colors_trials.txt'
         self.trials_fname = 'trial_structure/Colors_trials_simple.txt'
         self.log_fname = 'logs/' + category + '_' + pp + '.csv'
         self.stimuli_folder = 'stimuli/'

@@ -58,7 +58,6 @@ class Experiment():
                 expWin.flip()
                 timeFrame.complete()
                 
-
 bgColor = "grey" #First I determined the background color and text color
 txtColor = "black"       
 expWin = visual.Window(size=(1366,768),color=bgColor,units="pix") 
