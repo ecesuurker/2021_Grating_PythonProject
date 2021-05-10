@@ -1,1 +1,0 @@
-type	block	randomize	stim1	label	foil	key	ITI	color	color2	same_diff	presTime	title	content	trialText	button1	feedbackCorrect	feedbackIncorrect	keyboard

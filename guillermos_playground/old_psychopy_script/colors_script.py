@@ -12,15 +12,28 @@ import glob # lets you iterate through a folder of files
 class Experiment(object):
 
 
-    def __init__(self, pp, category, fps=60.0):
+    def __init__(self, pp, category, trialNum, fps=60.0):
         self.pp = pp
         self.fps = fps
         self.category = category
         # set up file paths, etc.
         #self.trials_fname = 'trial_structure/Colors_trials.txt'
         self.trials_fname = 'trial_structure/Colors_trials_simple.txt'
-        self.log_fname = 'logs/' + category + '_' + pp + '.csv'
+        self.log_fname = 'logs/' + str(trialNum) + '_' + pp + '.csv'
         self.stimuli_folder = 'stimuli/'
+        self.trialNum = trialNum
+        variableFile = open("trial_structure/CounterbalanceVariables.txt", "r")
+        counterbalance = csv.DictReader(variableFile, delimiter="\t")
+        for row in counterbalance:
+            if row["Trial_Number"] == str(trialNum):
+                self.angles = row["Angles"].split(" ")
+                print(self.angles)
+                self.label1 = row["Label1"]
+                self.label2 = row["Label2"]
+                self.sameKey = row["Same_key"]
+                self.diffKey = row["Diff_key"]
+                self.transferOrder = row["Transfer_Task_Order"]
+                self.frequency = row["Grating_Frequency"]
 
 
     def run(self):
@@ -59,6 +72,7 @@ class Experiment(object):
             closeShape=False,
             lineColor="black")
         self.image_l = visual.ImageStim(self.win, pos=(0, 0), size=[300,300])
+        self.grating = visual.GratingStim(self.win, units="pix", size=[200, 200], mask="gauss", contrast=1.0)
 
 
         # actually run the experiment routines
@@ -182,34 +196,40 @@ class Experiment(object):
         return trial
 
     def memory_trial(self, trial):
-        self.fixation.draw()
-        self.win.flip()
-        core.wait(.5)
-        self.box1.fillColor = literal_eval(trial['color'])
-        self.box1.draw()
-        self.win.flip()
-        core.wait(1)
-        self.fixation.draw()
-        self.win.flip()
-        core.wait(.5)
-        self.box1.fillColor = literal_eval(trial['color2'])
-        self.box1.draw()
-        self.win.flip()
-        core.wait(1)
-        self.word1.text = trial['content'].replace('<br>', '\n')
-        self.word1.draw()
-        self.win.callOnFlip(self.clock.reset)
-        self.isi.complete()
-        self.win.flip()
-        keys = event.waitKeys(keyList=['escape'] + trial['keyboard'].split(' '), timeStamped=self.clock)
-        trial['keypress'], trial['RT'] = keys[0]
-        if trial['keypress'] == 'escape':
-            core.quit()
-        if trial['keypress'] == trial['key']:
-            trial['ACC'] = 1
+        comparison = [[0,0],[1,1],[2,2],[3,3],[0,1],[1,2],[2,3]]
+        random.shuffle(comparison)
+        for t in range(7):
+            random.shuffle(comparison[t])
+            self.fixation.draw()
+            self.win.flip()
+            core.wait(.5)
+            self.grating.ori = literal_eval(int(self.angles[comparison[t][0]]))
+            self.grating.sf = literal_eval(int(random.choice(self.frequency)))
+            self.grating.draw()
+            self.win.flip()
+            core.wait(1)
+            self.fixation.draw()
+            self.win.flip()
+            core.wait(.5)
+            self.grating.ori = literal_eval(int(self.angles[comparison[t][1]]))
+            self.grating.sf = literal_eval(int(random.choice(self.frequency)))
+            self.grating.draw()
+            self.win.flip()
+            core.wait(1)
+            self.word1.text = trial['content'].replace('<br>', '\n')
+            self.word1.draw()
+            self.win.callOnFlip(self.clock.reset)
+            self.isi.complete()
+            self.win.flip()
+            keys = event.waitKeys(keyList=['escape'] + self.sameKey + self.diffKey, timeStamped=self.clock)
+            trial['keypress'], trial['RT'] = keys[0]
+            if trial['keypress'] == 'escape':
+                core.quit()
+            if trial['keypress'] == self.sameKey and ang[0] != ang[1] or trial["keypress"] == self.diffKey and ang[0] == ang[1]:
+                trial['ACC'] = 0
             # self.feedback(1)
-        else:
-            trial['ACC'] = 0
+            else:
+                trial['ACC'] = 1
             # self.feedback(0)
         self.win.callOnFlip(self.isi.start, float(trial['ITI']) / 1000 - self.frame_dur)
         # flip buffer again and start ISI timer
@@ -272,4 +292,4 @@ class Experiment(object):
         core.wait(.5)
 
 if __name__ == '__main__':
-    Experiment('test_99', 'Color').run()
+    Experiment('test_99', 'Color', 3).run()
