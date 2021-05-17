@@ -169,29 +169,35 @@ class Experiment(object):
 
 
     def categorization_trial(self, trial):
-        self.fixation.draw()
-        self.win.flip()
-        core.wait(.5)
-        self.word1.text = trial['label'].replace('<br>', '\n')
-        self.word2.text = trial['foil'].replace('<br>', '\n')
-        self.word1.pos = (-200, -200)
-        self.word2.pos = (200, -200)
-        self.word1.draw()
-        self.word2.draw()
-        self.box1.fillColor = literal_eval(trial['color'])
-        self.box1.draw()
-        self.win.flip()
-        keys = event.waitKeys(keyList=['escape'] + trial['keyboard'].split(' '), timeStamped=self.clock)
-        trial['keypress'], trial['RT'] = keys[0]
-        if trial['keypress'] == 'escape':
-            core.quit()
-        if trial['keypress'] == trial['key']:
-            trial['ACC'] = 1
-            self.feedback(1)
-        else:
-            trial['ACC'] = 0
-            self.feedback(0)
-        self.win.callOnFlip(self.isi.start, float(trial['ITI']) / 1000 - self.frame_dur)
+        ang = [0,1,2,3]
+        random.shuffle(ang)
+        for a in ang:
+            self.fixation.draw()
+            self.win.flip()
+            core.wait(.5)
+            self.grating.ori = literal_eval(self.angles[a])
+            self.grating.sf = literal_eval(random.choice(self.frequency))
+            self.grating.draw()
+            self.word1.text = self.label1
+            self.word2.text = self.label2
+            positions = [(-200,-200),(200,-200)]
+            random.shuffle(positions)
+            self.word1.pos = positions[0]
+            self.word2.pos = positions[1]
+            self.word1.draw()
+            self.word2.draw()
+            self.win.flip()
+            keys = event.waitKeys(keyList=['escape'] + [self.sameKey] + [self.diffKey], timeStamped=self.clock)
+            trial['keypress'], trial['RT'] = keys[0]
+            if trial['keypress'] == 'escape':
+                core.quit()
+            if a < 2 and positions[0] == (-200,-200) and trial['keypress'] == self.sameKey or a > 2 and positions[1] == (200,-200) and trial["keypress"] == self.diffKey:
+                trial['ACC'] = 1
+                self.feedback(1)
+            else:
+                trial['ACC'] = 0
+                self.feedback(0)
+            self.win.callOnFlip(self.isi.start, float(trial['ITI']) / 1000 - self.frame_dur)
         # flip buffer again and start ISI timer
         self.win.flip()
         return trial
@@ -199,12 +205,12 @@ class Experiment(object):
     def memory_trial(self, trial):
         comparison = [[0,0],[1,1],[2,2],[3,3],[0,1],[1,2],[2,3]]
         random.shuffle(comparison)
-        for t in range(len(comparison)):
-            random.shuffle(comparison[t])
+        for t in comparison:
+            random.shuffle(t)
             self.fixation.draw()
             self.win.flip()
             core.wait(.5)
-            self.grating.ori = literal_eval(self.angles[comparison[t][0]])
+            self.grating.ori = literal_eval(self.angles[t[0]])
             self.grating.sf = literal_eval(random.choice(self.frequency))
             self.grating.draw()
             self.win.flip()
@@ -212,7 +218,7 @@ class Experiment(object):
             self.fixation.draw()
             self.win.flip()
             core.wait(.5)
-            self.grating.ori = literal_eval(self.angles[comparison[t][1]])
+            self.grating.ori = literal_eval(self.angles[t[1]])
             self.grating.sf = literal_eval(random.choice(self.frequency))
             self.grating.draw()
             self.win.flip()
@@ -226,7 +232,7 @@ class Experiment(object):
             trial['keypress'], trial['RT'] = keys[0]
             if trial['keypress'] == 'escape':
                 core.quit()
-            if trial['keypress'] == self.sameKey and comparison[t][0] != comparison[t][1] or trial["keypress"] == self.diffKey and comparison[t][0] == comparison[t][1]:
+            if trial['keypress'] == self.sameKey and t[0] != t[1] or trial["keypress"] == self.diffKey and t[0] == t[1]:
                 trial['ACC'] = 0
             # self.feedback(1)
             else:
