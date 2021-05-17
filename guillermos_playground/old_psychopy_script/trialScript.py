@@ -1,12 +1,21 @@
 import csv #I just created values that will be counterbalanced
 import numpy  
 
-angle = [numpy.linspace(50,59,4,dtype="int"), numpy.linspace(53,62,4,dtype="int")]
+def value_creator(refVal,diff,n=4):
+    s = ""
+    num = -(n-1)/2
+    for i in range(n):
+        s += str(round(refVal+(num*diff),4)) + " "
+        num +=1
+    s = s[:-1]
+    return s
+
+angle = [value_creator(34,3), value_creator(56,3)]
 names = [["knurp", "blash"],["blash", "knurp"]]
 keys =[["z","."],[".","z"]]
 transferTask = [[1],[2]] #Since this is about the order of the trials I thought that their 
 #order can be arranged with an if condition
-gratingFreq = [numpy.linspace(0.03,0.042,4), numpy.linspace(0.033,0.045,4)]
+gratingFreq = [value_creator(0.033,0.004), value_creator(0.040,0.004)]
 counterbalance = {}
 trials = [0,0,0,0,0] #I did not create the list totally empty because I cannot manipulate
 i=1 #indexes if the list is empty
@@ -25,10 +34,10 @@ for i1 in range(2): #these loops create all 16 combinations and put them in a li
 print(counterbalance)
 fileName = "trial_structure/CounterbalanceVariables.txt"
 file = open(fileName, "w", newline="")
-fileField = ["Trial_Number", "Angles", "Label1", "Label2", "Same_key", "Diff_key", "Transfer_Task_Order", "Grating_Frequency"]
+fileField = ["List_Number", "Angles", "Label1", "Label2", "Same_key", "Diff_key", "Transfer_Task_Order", "Grating_Frequency"]
 f = csv.DictWriter(file, fieldnames=fileField, delimiter="\t")
 f.writeheader()
-for j in range(1,17):
+for j in range(1,33):
     row = {}
     row[fileField[0]] = j
     row[fileField[1]] = counterbalance[j][0]

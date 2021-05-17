@@ -12,20 +12,20 @@ import glob # lets you iterate through a folder of files
 class Experiment(object):
 
 
-    def __init__(self, pp, category, trialNum, fps=60.0):
+    def __init__(self, pp, category, cbList, fps=60.0):
         self.pp = pp
         self.fps = fps
         self.category = category
         # set up file paths, etc.
         #self.trials_fname = 'trial_structure/Colors_trials.txt'
         self.trials_fname = 'trial_structure/Colors_trials_simple.txt'
-        self.log_fname = 'logs/' + str(trialNum) + '_' + pp + '.csv'
+        self.log_fname = 'logs/' + str(cbList) + '_' + pp + '.csv'
         self.stimuli_folder = 'stimuli/'
-        self.trialNum = trialNum
+        self.cbList = cbList
         variableFile = open("trial_structure/CounterbalanceVariables.txt", "r")
         counterbalance = csv.DictReader(variableFile, delimiter="\t")
         for row in counterbalance:
-            if row["Trial_Number"] == str(trialNum):
+            if row["List_Number"] == str(cbList):
                 self.angles = row["Angles"].split(" ")
                 print(self.angles)
                 self.label1 = row["Label1"]
@@ -33,7 +33,8 @@ class Experiment(object):
                 self.sameKey = row["Same_key"]
                 self.diffKey = row["Diff_key"]
                 self.transferOrder = row["Transfer_Task_Order"]
-                self.frequency = row["Grating_Frequency"]
+                self.frequency = row["Grating_Frequency"].split(" ")
+                print(self.frequency)
 
 
     def run(self):
@@ -198,21 +199,21 @@ class Experiment(object):
     def memory_trial(self, trial):
         comparison = [[0,0],[1,1],[2,2],[3,3],[0,1],[1,2],[2,3]]
         random.shuffle(comparison)
-        for t in range(7):
+        for t in range(len(comparison)):
             random.shuffle(comparison[t])
             self.fixation.draw()
             self.win.flip()
             core.wait(.5)
-            self.grating.ori = literal_eval(int(self.angles[comparison[t][0]]))
-            self.grating.sf = literal_eval(int(random.choice(self.frequency)))
+            self.grating.ori = literal_eval(self.angles[comparison[t][0]])
+            self.grating.sf = literal_eval(random.choice(self.frequency))
             self.grating.draw()
             self.win.flip()
             core.wait(1)
             self.fixation.draw()
             self.win.flip()
             core.wait(.5)
-            self.grating.ori = literal_eval(int(self.angles[comparison[t][1]]))
-            self.grating.sf = literal_eval(int(random.choice(self.frequency)))
+            self.grating.ori = literal_eval(self.angles[comparison[t][1]])
+            self.grating.sf = literal_eval(random.choice(self.frequency))
             self.grating.draw()
             self.win.flip()
             core.wait(1)
@@ -221,11 +222,11 @@ class Experiment(object):
             self.win.callOnFlip(self.clock.reset)
             self.isi.complete()
             self.win.flip()
-            keys = event.waitKeys(keyList=['escape'] + self.sameKey + self.diffKey, timeStamped=self.clock)
+            keys = event.waitKeys(keyList=['escape'] + [self.sameKey] + [self.diffKey], timeStamped=self.clock)
             trial['keypress'], trial['RT'] = keys[0]
             if trial['keypress'] == 'escape':
                 core.quit()
-            if trial['keypress'] == self.sameKey and ang[0] != ang[1] or trial["keypress"] == self.diffKey and ang[0] == ang[1]:
+            if trial['keypress'] == self.sameKey and comparison[t][0] != comparison[t][1] or trial["keypress"] == self.diffKey and comparison[t][0] == comparison[t][1]:
                 trial['ACC'] = 0
             # self.feedback(1)
             else:
