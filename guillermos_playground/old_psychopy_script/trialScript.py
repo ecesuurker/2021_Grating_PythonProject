@@ -12,7 +12,7 @@ def value_creator(refVal,diff,n=4):
 
 angle = [value_creator(34,3), value_creator(56,3)]
 names = [["knurp", "blash"],["blash", "knurp"]]
-keys =[["z","."],[".","z"]]
+keys =[["a","l"],["l","a"]]
 transferTask = [[1],[2]] #Since this is about the order of the trials I thought that their 
 #order can be arranged with an if condition
 gratingFreq = [value_creator(0.033,0.004), value_creator(0.040,0.004)]

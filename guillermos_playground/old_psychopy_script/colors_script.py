@@ -24,17 +24,15 @@ class Experiment(object):
         self.cbList = cbList
         variableFile = open("trial_structure/CounterbalanceVariables.txt", "r")
         counterbalance = csv.DictReader(variableFile, delimiter="\t")
-        for row in counterbalance:
+        for row in counterbalance: #It reads out the trial file and assigns the variables
             if row["List_Number"] == str(cbList):
-                self.angles = row["Angles"].split(" ")
-                print(self.angles)
+                self.angles = row["Angles"].split(" ") #split() function splits strings into list elements according to the delimeter
                 self.label1 = row["Label1"]
                 self.label2 = row["Label2"]
                 self.sameKey = row["Same_key"]
                 self.diffKey = row["Diff_key"]
                 self.transferOrder = row["Transfer_Task_Order"]
                 self.frequency = row["Grating_Frequency"].split(" ")
-                print(self.frequency)
 
 
     def run(self):
@@ -74,7 +72,7 @@ class Experiment(object):
             lineColor="black")
         self.image_l = visual.ImageStim(self.win, pos=(0, 0), size=[300,300])
         self.grating = visual.GratingStim(self.win, units="pix", size=[200, 200], mask="gauss", contrast=1.0)
-
+        #I created a template grating similar to other shapes so that we can use it and manipulate only necessary things in the code below
 
         # actually run the experiment routines
         with open(self.trials_fname, 'r') as trial_file, open(self.log_fname, 'w', newline='') as log_file:
@@ -169,7 +167,7 @@ class Experiment(object):
 
 
     def categorization_trial(self, trial):
-        ang = [0,1,2,3]
+        ang = [0,1,2,3] #These are index values for angles. They indicate index number of the angle to be represented
         random.shuffle(ang)
         for a in ang:
             self.fixation.draw()
@@ -180,7 +178,7 @@ class Experiment(object):
             self.grating.draw()
             self.word1.text = self.label1
             self.word2.text = self.label2
-            positions = [(-200,-200),(200,-200)]
+            positions = [(-200,-200),(200,-200)] #Positions for the labels. I shuffle them so every trial they appear in random side
             random.shuffle(positions)
             self.word1.pos = positions[0]
             self.word2.pos = positions[1]
@@ -191,7 +189,10 @@ class Experiment(object):
             trial['keypress'], trial['RT'] = keys[0]
             if trial['keypress'] == 'escape':
                 core.quit()
-            if a < 2 and positions[0] == (-200,-200) and trial['keypress'] == self.sameKey or a > 2 and positions[1] == (200,-200) and trial["keypress"] == self.diffKey:
+            if a < 2 and positions[0] == (-200,-200) and trial['keypress'] == self.sameKey or a > 1 and positions[1] == (200,-200) and trial["keypress"] == self.diffKey:
+                #This long statement basically states that if the angle is one of the left two angles and the label for them is represented in the left side and if the
+                #the participant hit the same key button wrie accuracy 1 and same applies for angle being one of the two right angles and the label for them being 
+                #presented in right and the key for different is hit. However I just realized this accuracy statement is wrong. It does not account for all possibilities.
                 trial['ACC'] = 1
                 self.feedback(1)
             else:
@@ -203,15 +204,15 @@ class Experiment(object):
         return trial
 
     def memory_trial(self, trial):
-        comparison = [[0,0],[1,1],[2,2],[3,3],[0,1],[1,2],[2,3]]
+        comparison = [[0,0],[1,1],[2,2],[3,3],[0,1],[1,2],[2,3]] #These are indexes for the two angles that will be compared
         random.shuffle(comparison)
         for t in comparison:
-            random.shuffle(t)
+            random.shuffle(t) #It shuffles the angles that will be compared so that everytime they appear in random order
             self.fixation.draw()
             self.win.flip()
             core.wait(.5)
             self.grating.ori = literal_eval(self.angles[t[0]])
-            self.grating.sf = literal_eval(random.choice(self.frequency))
+            self.grating.sf = literal_eval(random.choice(self.frequency)) #Randomly picks a frequency
             self.grating.draw()
             self.win.flip()
             core.wait(1)
@@ -233,6 +234,7 @@ class Experiment(object):
             if trial['keypress'] == 'escape':
                 core.quit()
             if trial['keypress'] == self.sameKey and t[0] != t[1] or trial["keypress"] == self.diffKey and t[0] == t[1]:
+            #This statement basically states that if the participants hit the key for same stimuli but they are different or hit different but they are the same, give accuracy zero
                 trial['ACC'] = 0
             # self.feedback(1)
             else:
