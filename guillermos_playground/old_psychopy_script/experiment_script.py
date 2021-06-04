@@ -166,6 +166,8 @@ class Experiment(object):
                 else:
                     trial['ACC'] = 0
                     self.feedback(0)
+            #This accuracy code basically accepts an answer as accurate if the person pressed the left/right button and the appropriate word
+            #was presented in left/right
             self.win.callOnFlip(self.isi.start, float(trial['ITI']) / 1000 - self.frame_dur)
         # flip buffer again and start ISI timer
         self.win.flip()
