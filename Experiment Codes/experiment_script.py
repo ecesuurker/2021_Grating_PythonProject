@@ -2,7 +2,6 @@ import csv
 import random
 from psychopy import visual, core, event
 from ast import literal_eval
-import sounddevice as sd
 
 
 class Experiment(object):
@@ -33,10 +32,6 @@ class Experiment(object):
         txtcolor = 'white' 
         #self.win = visual.Window(fullscr=True, color=bgcolor, units='pix')
         self.win = visual.Window((1200, 900), color=bgcolor, units='pix')  # temporary presentation window setup, exchange for line above when running actual experiment
-
-        # basic setup for audio recording with sounddevice
-        sd.default.samplerate = 48000
-        sd.default.channels = 1
 
         # set up timing related stuff
         self.frame_dur = 1.0 / self.fps

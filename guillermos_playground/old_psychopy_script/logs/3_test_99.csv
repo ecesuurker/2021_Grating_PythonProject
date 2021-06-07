@@ -1,7 +1,0 @@
-type,block,randomize,stim1,label,foil,key,ITI,color,color2,same_diff,presTime,title,content,trialText,button1,feedbackCorrect,feedbackIncorrect,keyboard,keypress,RT,ACC,t
-instructions,1,,,,,,500,,,,,Welcome!, Your task is to learn to associate colors and novel words,,return,,,,return,0.8903010000358336,,1.4284798000007868
-instructions,1,,,,,,500,,,,,alrighty,<br><br><br><br>Press ENTER to begin.,,return,,,,return,0.2711346000432968,,1.7448287999723107
-categorization,3,yes,,knurp,blash,1,500,"[0,.0,.5]",,,,,,,,,,1 2 3,a,5.670389100036118,0,7.972064699977636
-categorization,3,yes,,blash,knurp,1,500,"[0,.0,.6]",,,,,,,,,,1 2 3,l,4.654948900046293,0,13.166999200009741
-categorization,3,yes,,knurp,blash,3,500,"[0,.0,.5]",,,,,,,,,,1 2 3,l,4.8037647000164725,0,18.51156329998048
-categorization,3,yes,,blash,knurp,3,500,"[0,.0,.6]",,,,,,,,,,1 2 3,l,5.018612700048834,0,24.072974500013515
