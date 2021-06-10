@@ -1,27 +1,18 @@
 import csv
 import random
-from psychopy import visual, core, event, sound
-import ast
+from psychopy import visual, core, event
 from ast import literal_eval
-import time
-import sounddevice as sd
-import soundfile as sf
-import glob # lets you iterate through a folder of files 
 
 
 class Experiment(object):
 
 
-    def __init__(self, pp, category, cbList, fps=60.0):
-        self.pp = pp
+    def __init__(self, participantNo, cbList, fps=60.0):
         self.fps = fps
-        self.category = category
         # set up file paths, etc.
         #self.trials_fname = 'trial_structure/Colors_trials.txt'
         self.trials_fname = 'trial_structure/Colors_trials_simple.txt'
-        self.log_fname = 'logs/' + str(cbList) + '_' + pp + '.csv'
-        self.stimuli_folder = 'stimuli/'
-        self.cbList = cbList
+        self.log_fname = 'logs/' + str(cbList) + '_' + participantNo + '.csv'
         variableFile = open("trial_structure/CounterbalanceVariables.txt", "r")
         counterbalance = csv.DictReader(variableFile, delimiter="\t")
         for row in counterbalance: #It reads out the trial file and assigns the variables
@@ -38,14 +29,9 @@ class Experiment(object):
     def run(self):
         # set up presentation window color, and size
         bgcolor = 'grey'
-        txtcolor = 'white'
-        c = .5 # variable that stores contrast values 
+        txtcolor = 'white' 
         #self.win = visual.Window(fullscr=True, color=bgcolor, units='pix')
         self.win = visual.Window((1200, 900), color=bgcolor, units='pix')  # temporary presentation window setup, exchange for line above when running actual experiment
-
-        # basic setup for audio recording with sounddevice
-        sd.default.samplerate = 48000
-        sd.default.channels = 1
 
         # set up timing related stuff
         self.frame_dur = 1.0 / self.fps
@@ -56,14 +42,9 @@ class Experiment(object):
         self.isi.start(.5)
 
         # various stimulus presentation boxes for text and images
-        self.word1 = visual.TextStim(self.win, color=txtcolor, height=30)
-        self.word1.wrapWidth = 900
-        self.word2 = visual.TextStim(self.win, color=txtcolor, height=30)
-        self.word2.wrapWidth = 900
-        self.title = visual.TextStim(self.win, pos=(0, 200), color=txtcolor, height=30)
-        self.title.wrapWidth = 900
-        self.box1 = visual.Rect(self.win, width=300, height=300, pos=[0,0], lineWidth=1, lineColor='black', fillColorSpace='rgb', fillColor=[0,.8,.4])
-        self.box2 = visual.Rect(self.win, width=300, height=300, pos=[300,0], lineWidth=1, lineColor='black', fillColorSpace='rgb', fillColor=[0,.8,.4])
+        self.word1 = visual.TextStim(self.win, color=txtcolor, height=30, wrapWidth = 900)
+        self.word2 = visual.TextStim(self.win, color=txtcolor, height=30, wrapWidth = 900)
+        self.title = visual.TextStim(self.win, pos=(0, 200), color=txtcolor, height=30, wrapWidth = 900)
         self.fixation = visual.ShapeStim(self.win, 
             vertices=((0, -15), (0, 15), (0,0), (-15,0), (15, 0)),
             lineWidth=5,
@@ -90,10 +71,7 @@ class Experiment(object):
                     blocks[trial['block']] = [trial]
                 else:
                     blocks[trial['block']].append(trial)
-
-
-            # present the trials
-            random.seed(self.pp)
+                    
             for block_number in sorted(blocks.keys()):
                 trials = blocks[block_number]
                 #if trials[0]['randomize'] == 'yes':
@@ -108,16 +86,12 @@ class Experiment(object):
 
     # select the appriopriate trial subroutine
     def present_trial(self, trial):
-        type = trial['type']
-        if type == 'instructions':
+        tType = trial['type']
+        if tType == 'instructions':
             trial = self.instruction_trial(trial)
-        elif type == 'exposure':
-            trial = self.exposure_trial(trial)
-        elif type == 'categorization':
+        elif tType == 'categorization':
             trial = self.categorization_trial(trial)
-        elif type == 'discrimination':
-            trial = self.discrimination_trial(trial)
-        elif type == 'memory':
+        elif tType == 'memory':
             trial = self.memory_trial(trial)
         else:
             # unknown trial type, return some kind of error?
@@ -146,26 +120,6 @@ class Experiment(object):
         self.win.flip()
         return trial
 
-
-    def exposure_trial(self, trial):
-        self.fixation.draw()
-        self.win.flip()
-        core.wait(.5)
-        self.word1.text = trial['label'].replace('<br>', '\n')
-        self.word1.draw()
-        self.win.flip()
-        core.wait(1)
-        self.box1.fillColor = literal_eval(trial['color'])
-        self.box1.draw()
-        self.win.flip()
-        core.wait(1)
-        self.isi.complete()
-        self.win.callOnFlip(self.isi.start, float(trial['ITI']) / 1000 - self.frame_dur)
-        # flip buffer again and start ISI timer
-        self.win.flip()
-        return trial
-
-
     def categorization_trial(self, trial):
         ang = [0,1,2,3] #These are index values for angles. They indicate index number of the angle to be represented
         random.shuffle(ang)
@@ -173,9 +127,7 @@ class Experiment(object):
             self.fixation.draw()
             self.win.flip()
             core.wait(.5)
-            self.grating.ori = literal_eval(self.angles[a])
-            self.grating.sf = literal_eval(random.choice(self.frequency))
-            self.grating.draw()
+            self.drawing(a)
             self.word1.text = self.label1
             self.word2.text = self.label2
             positions = [(-200,-200),(200,-200)] #Positions for the labels. I shuffle them so every trial they appear in random side
@@ -189,15 +141,28 @@ class Experiment(object):
             trial['keypress'], trial['RT'] = keys[0]
             if trial['keypress'] == 'escape':
                 core.quit()
-            if a < 2 and positions[0] == (-200,-200) and trial['keypress'] == self.sameKey or a > 1 and positions[1] == (200,-200) and trial["keypress"] == self.diffKey:
-                #This long statement basically states that if the angle is one of the left two angles and the label for them is represented in the left side and if the
-                #the participant hit the same key button wrie accuracy 1 and same applies for angle being one of the two right angles and the label for them being 
-                #presented in right and the key for different is hit. However I just realized this accuracy statement is wrong. It does not account for all possibilities.
-                trial['ACC'] = 1
-                self.feedback(1)
+            if keys[0][0] == "a":
+                if a < 2 and positions[0] == (-200,-200):
+                    trial['ACC'] = 1
+                    self.feedback(1)
+                elif a > 1 and positions[1] == (-200,-200):
+                    trial['ACC'] = 1
+                    self.feedback(1)
+                else:
+                    trial['ACC'] = 0
+                    self.feedback(0)
             else:
-                trial['ACC'] = 0
-                self.feedback(0)
+                if a < 2 and positions[0] == (200,-200):
+                    trial['ACC'] = 1
+                    self.feedback(1)
+                elif a > 1 and positions[1] == (200,-200):
+                    trial['ACC'] = 1
+                    self.feedback(1)
+                else:
+                    trial['ACC'] = 0
+                    self.feedback(0)
+            #This accuracy code basically accepts an answer as accurate if the person pressed the left/right button and the appropriate word
+            #was presented in left/right
             self.win.callOnFlip(self.isi.start, float(trial['ITI']) / 1000 - self.frame_dur)
         # flip buffer again and start ISI timer
         self.win.flip()
@@ -211,17 +176,13 @@ class Experiment(object):
             self.fixation.draw()
             self.win.flip()
             core.wait(.5)
-            self.grating.ori = literal_eval(self.angles[t[0]])
-            self.grating.sf = literal_eval(random.choice(self.frequency)) #Randomly picks a frequency
-            self.grating.draw()
+            self.drawing(t[0])
             self.win.flip()
             core.wait(1)
             self.fixation.draw()
             self.win.flip()
             core.wait(.5)
-            self.grating.ori = literal_eval(self.angles[t[1]])
-            self.grating.sf = literal_eval(random.choice(self.frequency))
-            self.grating.draw()
+            self.drawing(t[1])
             self.win.flip()
             core.wait(1)
             self.word1.text = trial['content'].replace('<br>', '\n')
@@ -244,39 +205,13 @@ class Experiment(object):
         # flip buffer again and start ISI timer
         self.win.flip()
         return trial
-
-    def discrimination_trial(self, trial):
-        self.fixation.draw()
-        self.win.flip()
-        core.wait(.5)
-        self.fixation.draw()
-        self.box1.fillColor = literal_eval(trial['color'])
-        self.box1.pos = (-300, 0)
-        self.box1.draw()
-        self.box2.fillColor = literal_eval(trial['color2'])
-        self.box2.draw()
-        self.win.flip()
-        core.wait(1)
-        self.word1.text = trial['content'].replace('<br>', '\n')
-        self.word1.draw()
-        self.win.callOnFlip(self.clock.reset)
-        self.win.flip()
-        self.isi.complete()
-        keys = event.waitKeys(keyList=['escape'] + trial['keyboard'].split(' '), timeStamped=self.clock)
-        trial['keypress'], trial['RT'] = keys[0]
-        if trial['keypress'] == 'escape':
-            core.quit()
-        if trial['keypress'] == trial['key']:
-            trial['ACC'] = 1
-            # self.feedback(1)
-        else:
-            trial['ACC'] = 0
-            # self.feedback(0)
-        self.win.callOnFlip(self.isi.start, float(trial['ITI']) / 1000 - self.frame_dur)
-        # flip buffer again and start ISI timer
-        self.win.flip()
-        return trial
     
+    def drawing(self, angle):
+        self.grating.ori = literal_eval(self.angles[angle])
+        self.grating.sf = literal_eval(random.choice(self.frequency)) #Randomly picks a frequency
+        self.grating.draw()
+        return None
+  
     def feedback(self, accuracy):
         i = random.randint(1, 3)
         if int(accuracy) == 1:
@@ -299,6 +234,7 @@ class Experiment(object):
         self.word1.draw()
         self.win.flip()
         core.wait(.5)
+        return None
 
 if __name__ == '__main__':
-    Experiment('test_99', 'Color', 3).run()
+    Experiment('test_99', 3).run()
