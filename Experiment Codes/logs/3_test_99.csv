@@ -1,11 +1,11 @@
 type,block,randomize,stim1,label,foil,key,ITI,color,color2,same_diff,presTime,title,content,trialText,button1,feedbackCorrect,feedbackIncorrect,keyboard,keypress,RT,ACC,t
-instructions,1,,,,,,500,,,,,Welcome!, Your task is to learn to associate colors and novel words,,return,,,,return,3.5797124999808148,,4.106084499973804
-instructions,1,,,,,,500,,,,,alrighty,<br><br><br><br>Press ENTER to begin.,,return,,,,return,0.2899742000736296,,4.439077700022608
-categorization,3,yes,,knurp,blash,1,500,"[0,.0,.5]",,,,,,,,,,1 2 3,l,5.603425099980086,0,10.583109800005332
-categorization,3,yes,,blash,knurp,1,500,"[0,.0,.6]",,,,,,,,,,1 2 3,l,5.061896400060505,1,16.210333699942566
-categorization,3,yes,,knurp,blash,3,500,"[0,.0,.5]",,,,,,,,,,1 2 3,a,5.021245299954899,1,21.772262000013143
-categorization,3,yes,,blash,knurp,3,500,"[0,.0,.6]",,,,,,,,,,1 2 3,a,4.8039660000940785,0,27.116856699925847
-memory,4,yes,,,,1,500,"[0,.0,.5]","[0,.0,.5]",same,,,same or different?,,,,,1 2 3,a,0.27778689994011074,0,50.9101406999398
-memory,4,yes,,,,1,500,"[0,.0,.6]","[0,.0,.6]",same,,,same or different?,,,,,1 2 3,l,0.34629350004252046,0,75.03656609996688
-memory,4,yes,,,,2,500,"[0,.0,.5]","[0,.0,.6]",different,,,same or different?,,,,,1 2 3,a,0.5370017000241205,0,100.44494499999564
-memory,4,yes,,,,2,500,"[0,.0,.6]","[0,.0,.5]",different,,,same or different?,,,,,1 2 3,l,0.30381049995776266,1,124.58799419994466
+instructions,1,,,,,,500,,,,,Welcome!, Your task is to learn to associate colors and novel words,,return,,,,return,3.017303399999946,,3.626044799999363
+instructions,1,,,,,,500,,,,,alrighty,<br><br><br><br>Press ENTER to begin.,,return,,,,return,0.3894815000003291,,4.541757899998629
+categorization,3,yes,,knurp,blash,1,500,"[0,.0,.5]",,,,,,,,,,1 2 3,l,7.566877700000987,1,12.634081899999728
+categorization,3,yes,,blash,knurp,1,500,"[0,.0,.6]",,,,,,,,,,1 2 3,l,5.116125599999577,0,18.295149599998695
+categorization,3,yes,,knurp,blash,3,500,"[0,.0,.5]",,,,,,,,,,1 2 3,l,5.0466837999993,0,23.890074999999342
+categorization,3,yes,,blash,knurp,3,500,"[0,.0,.6]",,,,,,,,,,1 2 3,l,4.809397299999546,0,29.25132510000003
+memory,4,yes,,,,1,500,"[0,.0,.5]","[0,.0,.5]",same,,,same or different?,,,,,1 2 3,a,0.2991283999999723,0,54.459867399998984
+memory,4,yes,,,,1,500,"[0,.0,.6]","[0,.0,.6]",same,,,same or different?,,,,,1 2 3,l,0.5140528000010818,0,78.7030064999999
+memory,4,yes,,,,2,500,"[0,.0,.5]","[0,.0,.6]",different,,,same or different?,,,,,1 2 3,a,0.4193108999988908,1,102.61289469999974
+memory,4,yes,,,,2,500,"[0,.0,.6]","[0,.0,.5]",different,,,same or different?,,,,,1 2 3,l,0.35178019999875687,0,126.08976749999965
