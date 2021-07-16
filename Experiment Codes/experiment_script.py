@@ -39,7 +39,7 @@ class Experiment(object):
         self.expclock = core.Clock()  # whole experiment timer
         # inter trial interval setup
         self.isi = core.StaticPeriod()
-        self.isi.start(.5)
+        #self.isi.start(.5)
 
         # various stimulus presentation boxes for text and images
         self.word1 = visual.TextStim(self.win, color=txtcolor, height=30, wrapWidth = 900)
@@ -104,6 +104,7 @@ class Experiment(object):
 
     def instruction_trial(self, trial):
         # present instruction trial
+        self.isi.start(.5)
         self.title.text = trial['title']
         self.title.draw()
         self.word1.text = trial['content'].replace('<br>', '\n')
@@ -124,9 +125,11 @@ class Experiment(object):
         ang = [0,1,2,3] #These are index values for angles. They indicate index number of the angle to be represented
         random.shuffle(ang)
         for a in ang:
+            self.isi.start(.5)
             self.fixation.draw()
             self.win.flip()
-            core.wait(.5)
+            #core.wait(.5)
+            self.isi.complete()
             self.drawing(a)
             self.word1.text = self.label1
             self.word2.text = self.label2
@@ -163,7 +166,7 @@ class Experiment(object):
                     self.feedback(0)
             #This accuracy code basically accepts an answer as accurate if the person pressed the left/right button and the appropriate word
             #was presented in left/right
-            self.win.callOnFlip(self.isi.start, float(trial['ITI']) / 1000 - self.frame_dur)
+            #self.win.callOnFlip(self.isi.start, float(trial['ITI']) / 1000 - self.frame_dur)
         # flip buffer again and start ISI timer
         self.win.flip()
         return trial
@@ -173,22 +176,30 @@ class Experiment(object):
         random.shuffle(comparison)
         for t in comparison:
             random.shuffle(t) #It shuffles the angles that will be compared so that everytime they appear in random order
+            self.isi.start(.5)
             self.fixation.draw()
             self.win.flip()
-            core.wait(.5)
+            self.isi.complete()
+            #core.wait(.5)
+            self.isi.start(1)
             self.drawing(t[0])
             self.win.flip()
-            core.wait(1)
+            self.isi.complete()
+            #core.wait(1)
+            self.isi.start(.5)
             self.fixation.draw()
             self.win.flip()
-            core.wait(.5)
+            self.isi.complete()
+            #core.wait(.5)
+            self.isi.start(1)
             self.drawing(t[1])
             self.win.flip()
-            core.wait(1)
+            self.isi.complete()
+            #core.wait(1)
             self.word1.text = trial['content'].replace('<br>', '\n')
             self.word1.draw()
             self.win.callOnFlip(self.clock.reset)
-            self.isi.complete()
+            #self.isi.complete()
             self.win.flip()
             keys = event.waitKeys(keyList=['escape'] + [self.sameKey] + [self.diffKey], timeStamped=self.clock)
             trial['keypress'], trial['RT'] = keys[0]
@@ -201,7 +212,7 @@ class Experiment(object):
             else:
                 trial['ACC'] = 1
             # self.feedback(0)
-        self.win.callOnFlip(self.isi.start, float(trial['ITI']) / 1000 - self.frame_dur)
+        #self.win.callOnFlip(self.isi.start, float(trial['ITI']) / 1000 - self.frame_dur)
         # flip buffer again and start ISI timer
         self.win.flip()
         return trial
