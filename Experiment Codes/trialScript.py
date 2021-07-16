@@ -11,7 +11,7 @@ def value_creator(refVal,diff,n=4):
     return s
 
 angle = [value_creator(34,3), value_creator(56,3)]
-names = [["knurp", "blash"],["blash", "knurp"]]
+names = [["knurp", "blag"],["blag", "knurp"]]
 keys =[["a","l"],["l","a"]]
 transferTask = [[1],[2]] #Since this is about the order of the trials I thought that their 
 #order can be arranged with an if condition
