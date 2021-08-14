@@ -30,6 +30,12 @@ class Experiment(object):
         log_fields = ['cbList','type', 'grating1_angle', 'grating1_freq', 'grating2_angle', 'grating2_freq','keypress', 'RT', 'ACC', 't']
         self.log = csv.DictWriter(log_file, fieldnames=log_fields)
         self.log.writeheader()
+        ins = open("instructions/Instructions.csv", "r")
+        i = csv.DictReader(ins)
+        self.instructions = {} #reads instructions into a dictionary in which keys are the type of the instruction
+        for r in i:
+            self.instructions[r["Type"]] = r["Dutch"].replace("<<same>>", self.sameKey).replace("<<diff>>", self.diffKey)
+        
 
     def run(self):
         # set up presentation window color, and size
@@ -126,116 +132,130 @@ class Experiment(object):
         self.win.flip()
         return trial
     """
-    def categorization_trial(self):
-        self.clock.reset()
-        ang = [0,1,2,3] #These are index values for angles. They indicate index number of the angle to be represented
-        random.shuffle(ang)
-        for a in ang:
-            trial = {}
-            trial["cbList"] = self.cbList
-            trial["type"] = "categorization"
-            self.isi.start(.5)
-            self.fixation.draw()
-            self.win.flip()
-            #core.wait(.5)
-            self.isi.complete()
-            trial["grating1_angle"], trial["grating1_freq"] = self.drawing(a)
-            self.word1.text = self.label1
-            self.word2.text = self.label2
-            positions = [(-200,-200),(200,-200)] #Positions for the labels. I shuffle them so every trial they appear in random side
-            random.shuffle(positions)
-            self.word1.pos = positions[0]
-            self.word2.pos = positions[1]
-            self.word1.draw()
-            self.word2.draw()
-            self.win.flip()
-            keys = event.waitKeys(keyList=['escape'] + [self.sameKey] + [self.diffKey], timeStamped=self.clock)
-            trial['keypress'], trial['RT'] = keys[0]
-            if trial['keypress'] == 'escape':
-                core.quit()
-            if keys[0][0] == "a":
-                if a < 2 and positions[0] == (-200,-200):
-                    trial['ACC'] = 1
-                    self.feedback(1)
-                elif a > 1 and positions[1] == (-200,-200):
-                    trial['ACC'] = 1
-                    self.feedback(1)
+    def categorization_trial(self, bNumber):
+        self.instr("get ready")
+        for i in range(bNumber): #determines for how many blocks the task runs
+            ang = [0,1,2,3]#*24 #These are index values for angles. They indicate index number of the angle to be represented
+            #adjusted the number of trials in a block
+            random.shuffle(ang)
+            for a in ang:
+                self.clock.reset()
+                trial = {}
+                trial["cbList"] = self.cbList
+                trial["type"] = "categorization"
+                self.isi.start(.5)
+                self.fixation.draw()
+                self.win.flip()
+                #core.wait(.5)
+                self.isi.complete()
+                trial["grating1_angle"], trial["grating1_freq"] = self.drawing(a)
+                self.word1.text = self.label1
+                self.word2.text = self.label2
+                positions = [(-200,-200),(200,-200)] #Positions for the labels. I shuffle them so every trial they appear in random side
+                random.shuffle(positions)
+                self.word1.pos = positions[0]
+                self.word2.pos = positions[1]
+                self.word1.draw()
+                self.word2.draw()
+                self.win.flip()
+                keys = event.waitKeys(keyList=['escape'] + [self.sameKey] + [self.diffKey], timeStamped=self.clock)
+                trial['keypress'], trial['RT'] = keys[0]
+                if trial['keypress'] == 'escape':
+                    core.quit()
+                if keys[0][0] == "a":
+                    if a < 2 and positions[0] == (-200,-200):
+                        trial['ACC'] = 1
+                        self.feedback(1)
+                    elif a > 1 and positions[1] == (-200,-200):
+                        trial['ACC'] = 1
+                        self.feedback(1)
+                    else:
+                        trial['ACC'] = 0
+                        self.feedback(0)
                 else:
-                    trial['ACC'] = 0
-                    self.feedback(0)
-            else:
-                if a < 2 and positions[0] == (200,-200):
-                    trial['ACC'] = 1
-                    self.feedback(1)
-                elif a > 1 and positions[1] == (200,-200):
-                    trial['ACC'] = 1
-                    self.feedback(1)
-                else:
-                    trial['ACC'] = 0
-                    self.feedback(0)
-            trial['t'] = self.expclock.getTime()
-            self.log.writerow(trial)
+                    if a < 2 and positions[0] == (200,-200):
+                        trial['ACC'] = 1
+                        self.feedback(1)
+                    elif a > 1 and positions[1] == (200,-200):
+                        trial['ACC'] = 1
+                        self.feedback(1)
+                    else:
+                        trial['ACC'] = 0
+                        self.feedback(0)
+                trial['t'] = self.expclock.getTime()
+                self.log.writerow(trial)
+            if i != bNumber - 1:
+                self.instr("Break") #break instruction is not displayed at the end of tasks
             #This accuracy code basically accepts an answer as accurate if the person pressed the left/right button and the appropriate word
             #was presented in left/right
             #self.win.callOnFlip(self.isi.start, float(trial['ITI']) / 1000 - self.frame_dur)
         # flip buffer again and start ISI timer
-        self.win.flip()
+            self.win.flip()
+        self.instr("Next task")
         return None
 
     def discrimination_trial(self, transfer="No"):
-        self.clock.reset()
-        comparison = [[0,0],[1,1],[2,2],[3,3],[0,1],[1,2],[2,3]] #These are indexes for the two angles that will be compared
-        random.shuffle(comparison)
-        for t in comparison:
-            trial = {}
-            trial["cbList"] = self.cbList
-            if transfer == "No":
-                trial["type"] = "discrimination"
-            else:
-                trial["type"] = "discrimination_transfer"
-            random.shuffle(t) #It shuffles the angles that will be compared so that everytime they appear in random order
-            self.isi.start(.5)
-            self.fixation.draw()
-            self.win.flip()
-            self.isi.complete()
-            #core.wait(.5)
-            self.isi.start(1)
-            trial["grating1_angle"], trial["grating1_freq"] = self.drawing(t[0], transfer=transfer)
-            self.win.flip()
-            self.isi.complete()
-            #core.wait(1)
-            self.isi.start(.5)
-            self.fixation.draw()
-            self.win.flip()
-            self.isi.complete()
-            #core.wait(.5)
-            self.isi.start(1)
-            trial["grating2_angle"], trial["grating2_freq"] = self.drawing(t[1],transfer=transfer)
-            self.win.flip()
-            self.isi.complete()
-            #core.wait(1)
-            self.word1.text = "zelfde/anders"
-            self.word1.draw()
-            self.win.callOnFlip(self.clock.reset)
-            #self.isi.complete()
-            self.win.flip()
-            keys = event.waitKeys(keyList=['escape'] + [self.sameKey] + [self.diffKey], timeStamped=self.clock)
-            trial['keypress'], trial['RT'] = keys[0]
-            if trial['keypress'] == 'escape':
-                core.quit()
-            if trial['keypress'] == self.sameKey and t[0] != t[1] or trial["keypress"] == self.diffKey and t[0] == t[1]:
-            #This statement basically states that if the participants hit the key for same stimuli but they are different or hit different but they are the same, give accuracy zero
-                trial['ACC'] = 0
-            # self.feedback(1)
-            else:
-                trial['ACC'] = 1
-            trial['t'] = self.expclock.getTime()
-            self.log.writerow(trial)
+        self.instr("get ready")
+        for i in range(2): #since there is a break in the middle of the task, I have written the code as two parts with a loop
+            comparison = [[0,0],[1,1],[2,2],[3,3],[0,1],[1,2],[2,3]]  #These are indexes for the two angles that will be compared
+            #comparison = comparison * 7
+            #del comparison[random.randint(0,49)]
+            random.shuffle(comparison)
+            for t in comparison:
+                self.clock.reset()
+                trial = {}
+                trial["cbList"] = self.cbList
+                if transfer == "No":
+                    trial["type"] = "discrimination"
+                else:
+                    trial["type"] = "discrimination_transfer"
+                random.shuffle(t) #It shuffles the angles that will be compared so that everytime they appear in random order
+                self.isi.start(.5)
+                self.fixation.draw()
+                self.win.flip()
+                self.isi.complete()
+                #core.wait(.5)
+                self.isi.start(1)
+                trial["grating1_angle"], trial["grating1_freq"] = self.drawing(t[0], transfer=transfer)
+                self.win.flip()
+                self.isi.complete()
+                #core.wait(1)
+                self.isi.start(.5)
+                self.fixation.draw()
+                self.win.flip()
+                self.isi.complete()
+                #core.wait(.5)
+                self.isi.start(1)
+                trial["grating2_angle"], trial["grating2_freq"] = self.drawing(t[1],transfer=transfer)
+                self.win.flip()
+                self.isi.complete()
+                #core.wait(1)
+                self.word1.text = "zelfde/anders"
+                self.word1.pos = (0,0)
+                self.word1.draw()
+                self.win.callOnFlip(self.clock.reset)
+                #self.isi.complete()
+                self.win.flip()
+                keys = event.waitKeys(keyList=['escape'] + [self.sameKey] + [self.diffKey], timeStamped=self.clock)
+                trial['keypress'], trial['RT'] = keys[0]
+                if trial['keypress'] == 'escape':
+                    core.quit()
+                if trial['keypress'] == self.sameKey and t[0] != t[1] or trial["keypress"] == self.diffKey and t[0] == t[1]:
+                #This statement basically states that if the participants hit the key for same stimuli but they are different or hit different but they are the same, give accuracy zero
+                    trial['ACC'] = 0
+                # self.feedback(1)
+                else:
+                    trial['ACC'] = 1
+                trial['t'] = self.expclock.getTime()
+                self.log.writerow(trial)
+            if i == 0:
+                self.instr("Break")
             # self.feedback(0)
-        #self.win.callOnFlip(self.isi.start, float(trial['ITI']) / 1000 - self.frame_dur)
-        # flip buffer again and start ISI timer
-        self.win.flip()
-        return trial
+            #self.win.callOnFlip(self.isi.start, float(trial['ITI']) / 1000 - self.frame_dur)
+            # flip buffer again and start ISI timer
+            self.win.flip()
+        self.instr("Next task")
+        return None
     
     def drawing(self, angle, transfer="No"):
         ang = float(self.angles[angle])
@@ -273,26 +293,41 @@ class Experiment(object):
         core.wait(.5)
         return None
     
-    def sessions(self, sNo):
+    def sessions(self, sNo): #a function for calling task functions according to the sessions and display instructions
         if int(sNo) == 1:
+            self.instr("Initial intro")
+            self.instr("Intro session1")
+            self.instr("detailed instructions1")
             if int(self.transferOrder) == 1:
                 self.discrimination_trial()
                 self.discrimination_trial(transfer="Yes")
             else:
                 self.discrimination_trial(transfer="Yes")
                 self.discrimination_trial()
-            self.categorization_trial()
-        elif int(sNo) == 2 or 4:
-            self.categorization_trial()
-            self.categorization_trial()
+            self.instr("detailed instructions2")
+            self.categorization_trial(2)
+        elif int(sNo) == 2 or int(sNo) == 4:
+            i = "welcome back" + str(sNo)
+            self.instr(i)
+            self.categorization_trial(10)
         elif int(sNo) == 3:
-            self.categorization_trial()
+            self.instr("welcome back3")
+            self.categorization_trial(4)
             self.discrimination_trial()
         elif int(sNo) == 5:
-            self.categorization_trial()
+            self.instr("welcome back5")
+            self.categorization_trial(4)
             self.discrimination_trial()
             self.discrimination_trial(transfer="Yes")
         self.win.close()
+        return None
+    
+    def instr(self,instructions): #a function that displays instructions according to the type of the instruction
+        self.word1.text = self.instructions[instructions]
+        self.word1.pos = (0,50)
+        self.word1.draw()
+        self.win.flip()
+        event.waitKeys()
         return None
 
 if __name__ == '__main__':
